@@ -1,0 +1,81 @@
+﻿@model StringIdCreation.Models.MarketModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create multiple StringIds</title>
+    <link rel="stylesheet" href="~/Styles/Style.css" type="text/css" />
+</head>
+<body>
+    <div id="redirection">
+        @Html.ActionLink("Create single StringId >>", "Index", "Home")
+    </div>
+
+    @using (Html.BeginForm("Index", "MultipleCreation", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <th colspan="2" align="left">Create multiple StringIds</th>
+            </tr>
+            <tr>
+                <td>Enviroment:</td>
+                <td>
+                    @Html.DropDownListFor(m => m.Environment, new List<SelectListItem>
+                     { new SelectListItem{Text="Dev", Value="DEV", Selected = true},
+                     new SelectListItem{Text="Test", Value="TEST"},
+                     new SelectListItem{Text="Prod", Value="PROD"},
+                     new SelectListItem{Text="LLT", Value="LLT"}
+                     })
+
+                </td>
+            </tr>
+            <tr>
+                <td>StringType: </td>
+                <td>
+                    @Html.DropDownListFor(m => m.StringType, new List<SelectListItem>
+                   { new SelectListItem{Text="Market Template", Value="MarketTemplate", Selected = true},
+                     new SelectListItem{Text="Option Template", Value="OptionTemplate"}})
+                </td>
+            </tr>
+            <tr>
+                <td>Choose Text file</td>
+                <td>
+                    <input type="file" name="File" required />
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Submit" /></td>
+            </tr>
+        </table>
+        <p></p>
+        var data = ViewBag.Message;
+        if (data.ResultList != null)
+        {
+            <div class="result" id="env">@data.Environment environment</div>
+            <div class="result">@data.StringType</div>
+
+            foreach (var item in data.ResultList)
+            {
+                if (data.Error != null)
+                {
+                    <div class="error">Error: @item.Error</div>
+                }
+
+                <div style="padding:5px">{ "TemplateId": @item.TemplateId, "NameId":  @item.Id }, <b style="color:red;"> @item.Error</b> </div>
+
+            }
+        }
+        else if (data.Error != null)
+        {
+            <div class="error">Error: @data.Error</div>
+        }
+    }
+</body>
+</html>

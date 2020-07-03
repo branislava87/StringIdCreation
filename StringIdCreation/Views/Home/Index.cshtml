@@ -1,0 +1,87 @@
+﻿@model StringIdCreation.Models.MarketModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create single StringIds</title>
+    <link rel="stylesheet" href="~/Styles/Style.css" type="text/css" />
+</head>
+<body>
+    <div id="redirection">
+        @Html.ActionLink("Create multiple StringIds >>", "Index", "MultipleCreation")
+    </div>
+
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+    {
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <th colspan="2" align="left">Create single StringId</th>
+            </tr>
+            <tr>
+                <td>Enviroment:</td>
+                <td>
+                    @Html.DropDownListFor(m => m.Environment, new List<SelectListItem>
+                     { new SelectListItem{Text="Dev", Value="DEV", Selected = true},
+                     new SelectListItem{Text="Test", Value="TEST"},
+                     new SelectListItem{Text="Prod", Value="PROD"},
+                     new SelectListItem{Text="LLT", Value="LLT"}
+                     })
+
+                </td>
+            </tr>
+            <tr>
+                <td>StringType: </td>
+                <td>
+                    @Html.DropDownListFor(m => m.StringType, new List<SelectListItem>
+                   { new SelectListItem{Text="Market Template", Value="MarketTemplate", Selected = true},
+                     new SelectListItem{Text="Option Template", Value="OptionTemplate"},
+                     new SelectListItem{Text="Market Type", Value="MarketType"},
+                     new SelectListItem{Text="Option Type", Value="OptionType"}})
+                </td>
+            </tr>
+            <tr>
+                <td>Name*: </td>
+                <td>
+                    <input type="text" name="Name"  value="@Request.Form["Name"]" required />
+                </td>
+            </tr>
+            <tr>
+                <td>TemplateId: </td>
+                <td>
+                    <input type="text" name="TemplateId" value="@Request.Form["TemplateId"]"  />
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Submit" /></td>
+            </tr>
+        </table>
+        <p></p>
+        var data = ViewBag.Message;
+
+        if (data.Error != null)
+        {
+            <div class="error">Error: @data.Error</div>
+        }
+        else if (data.Id != null)
+        {
+            <div class="result" id="env">@data.Environment environment</div>
+            <div class="result">@data.StringType</div>
+            if (data.StringType.Contains("Template"))
+            {
+                <div style="padding:2px">{ "TemplateId": @data.TemplateId, "NameId": @data.Id }</div>
+            }
+            else if (data.StringType.Contains("Type"))
+            {
+                <div style="padding:2px">"@data.Name": @data.Id</div>
+            }
+        }
+    }
+</body>
+</html>
